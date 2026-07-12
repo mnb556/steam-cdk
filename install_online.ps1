@@ -27,8 +27,17 @@ Invoke-WebRequest "$repo/dll/packageinfo.vdf" -OutFile "$workDir\dll\packageinfo
 Invoke-WebRequest "$repo/dll/steam_license_writer.py" -OutFile "$workDir\dll\steam_license_writer.py" -UseBasicParsing
 Invoke-WebRequest "$repo/dll/steam_license_config.json" -OutFile "$workDir\dll\steam_license_config.json" -UseBasicParsing
 
-Write-Host "[2/4] Installing dependencies..."
-pip install flask -q 2>$null
+Write-Host "[2/4] Python + Flask..."
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Host "  Installing Python 3.11..."
+    $pyUrl = "https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe"
+    $pyExe = "$env:TEMP\python-installer.exe"
+    Invoke-WebRequest $pyUrl -OutFile $pyExe -UseBasicParsing
+    Start-Process $pyExe -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
+    Remove-Item $pyExe
+    $env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")
+}
+python -m pip install flask -q 2>$null
 
 Write-Host "[3/4] Setting up Steam cache..."
 $steamPath = ""
