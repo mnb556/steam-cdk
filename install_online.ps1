@@ -40,9 +40,11 @@ if (!(Get-Command python -ErrorAction SilentlyContinue)) {
 python -m pip install flask pyopenssl -q 2>$null
 
 Write-Host "[5/5] Starting CDK server..."
+# HTTPS for VapourTool CDK validation (port 8443 -> netsh 443)
 Start-Process python -ArgumentList "-c `"from app import app; app.run(host='127.0.0.1', port=8443, ssl_context='adhoc')`"" -WorkingDirectory "$workDir\server" -WindowStyle Hidden
+# HTTP for admin panel (port 5000)
+Start-Process python -ArgumentList "$workDir\server\app.py" -WorkingDirectory "$workDir\server" -WindowStyle Hidden
 Start-Sleep 3
 
 Write-Host ""
-Write-Host "[OK] Done! Open Steam -> Add Game -> Activate Product" -ForegroundColor Green
-Write-Host "Admin panel: http://127.0.0.1:5000?token=changeme" -ForegroundColor Cyan
+Write-Host "[OK] Steam activating... enter CDK" -ForegroundColor Green

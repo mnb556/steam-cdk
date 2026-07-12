@@ -48,6 +48,13 @@ def init_db():
     );
     """)
     con.execute("INSERT OR IGNORE INTO games(appid, game_name, meta) VALUES(?,?,?)", (1623730, "幻兽帕鲁", "{}"))
+    # Auto-generate CDK codes if none exist
+    count = con.execute("SELECT COUNT(*) FROM cdk_codes").fetchone()[0]
+    if count == 0:
+        for _ in range(50):
+            raw = ''.join(secrets.choice(ALPHABET) for _ in range(25))
+            c = '-'.join(raw[i:i+5] for i in range(0, 25, 5))
+            con.execute("INSERT INTO cdk_codes(cdk, appid, created_at, note) VALUES(?,?,?,?)", (c, 1623730, now(), "auto-generated"))
     con.commit()
     con.close()
 
