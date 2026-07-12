@@ -1,0 +1,9 @@
+*.pyc
+__pycache__/
+*.sqlite3
+*.zip
+Codex-*
+reverse-flow-*
+*.bak*
+server/server.crt
+server/server.key

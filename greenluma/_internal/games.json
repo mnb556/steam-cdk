@@ -1,0 +1,41 @@
+{
+  "PALW-ORLD-PARU1": {
+    "appid": "1623730",
+    "name": "Palworld",
+    "depot_id": "1623731",
+    "manifest_id": "0",
+    "dlc_ids": [
+      "2846920"
+    ]
+  },
+  "PALW-ORLD-PARU2": {
+    "appid": "1623730",
+    "name": "Palworld",
+    "depot_id": "1623731",
+    "manifest_id": "0",
+    "dlc_ids": [
+      "2846920"
+    ]
+  },
+  "GTA5-ROCK-STAR-01": {
+    "appid": "271590",
+    "name": "Grand Theft Auto V",
+    "depot_id": "271591",
+    "manifest_id": "0",
+    "dlc_ids": []
+  },
+  "CYBER-PUNK-2077": {
+    "appid": "1091500",
+    "name": "Cyberpunk 2077",
+    "depot_id": "1091501",
+    "manifest_id": "0",
+    "dlc_ids": []
+  },
+  "ELDE-NRIN-G0001": {
+    "appid": "1245620",
+    "name": "ELDEN RING",
+    "depot_id": "1245621",
+    "manifest_id": "0",
+    "dlc_ids": []
+  }
+}
