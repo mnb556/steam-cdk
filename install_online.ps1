@@ -17,6 +17,7 @@ Write-Host "[1/4] Downloading server files..."
 Remove-Item $workDir -Recurse -Force -ErrorAction SilentlyContinue
 mkdir $workDir -Force | Out-Null
 mkdir "$workDir\server\templates" -Force | Out-Null
+mkdir "$workDir\dll" -Force | Out-Null
 
 Invoke-WebRequest "$repo/server/app.py" -OutFile "$workDir\server\app.py" -UseBasicParsing
 Invoke-WebRequest "$repo/server/requirements.txt" -OutFile "$workDir\server\requirements.txt" -UseBasicParsing
