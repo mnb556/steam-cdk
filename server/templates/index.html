@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>激活码管理后台</title>
+<style>body{font-family:Microsoft YaHei,Segoe UI,Arial;margin:24px;background:#1a1a2e;color:#e0e0e0}h1,h2{color:#e94560}table{border-collapse:collapse;width:100%;margin:16px 0;background:#16213e}td,th{border:1px solid #0f3460;padding:8px}th{background:#0f3460}code{background:#0f3460;padding:3px 6px;border-radius:4px;color:#e94560}input,select,button{padding:8px 12px;margin:4px;background:#0f3460;border:1px solid #1a5276;color:white;border-radius:6px}button{background:#e94560;border:none;cursor:pointer;font-weight:bold}button:hover{background:#ff6b81}input:focus,select:focus{border-color:#e94560;outline:none}</style>
+<h1>🎮 幻兽帕鲁 · 激活码管理后台</h1>
+{% with messages=get_flashed_messages() %}{% for m in messages %}<p><b>{{m}}</b></p>{% endfor %}{% endwith %}
+<h2>📋 游戏列表</h2>
+<form method="post" action="/admin/games">
+<input type="hidden" name="token" value="{{token}}"><input name="appid" placeholder="AppID"><input name="game_name" placeholder="游戏名称"><button>添加/更新</button>
+</form>
+<table><tr><th>AppID</th><th>游戏名称</th></tr>{% for g in games %}<tr><td>{{g.appid}}</td><td>{{g.game_name}}</td></tr>{% endfor %}</table>
+<h2>🔑 生成激活码</h2>
+<form method="post" action="/admin/cdk/generate">
+<input type="hidden" name="token" value="{{token}}"><select name="appid">{% for g in games %}<option value="{{g.appid}}">{{g.appid}} {{g.game_name}}</option>{% endfor %}</select><input name="count" value="10" placeholder="数量"><input name="note" placeholder="备注"><button>生成激活码</button>
+</form>
+<h2>📝 激活码列表</h2>
+<table><tr><th>激活码</th><th>游戏</th><th>状态</th><th>绑定机器</th><th>使用时间</th><th>备注</th></tr>{% for c in codes %}<tr><td><code>{{c.cdk}}</code></td><td>{{c.appid}} {{c.game_name}}</td><td>{{c.status}}</td><td>{{c.machine_id or ''}}</td><td>{{c.used_at or ''}}</td><td>{{c.note or ''}}</td></tr>{% endfor %}</table>
+<h2>📊 激活记录</h2>
+<table><tr><th>ID</th><th>激活码</th><th>AppID</th><th>机器码</th><th>成功</th><th>信息</th><th>时间</th></tr>{% for l in logs %}<tr><td>{{l.id}}</td><td>{{l.cdk}}</td><td>{{l.appid}}</td><td>{{l.machine_id}}</td><td>{{l.ok}}</td><td>{{l.msg}}</td><td>{{l.created_at}}</td></tr>{% endfor %}</table>

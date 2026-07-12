@@ -1,0 +1,14 @@
+{
+  "target_appids": [1623730],
+  "steamid": 76561198000000000,
+  "force_auth": true,
+  "secret": "ctf-local-license-secret",
+  "activation_prefix": "CTF",
+  "process_names": ["steam.exe"],
+  "inject_any_process_with_steam_api": false,
+  "persistence": true,
+  "restart_steam_client": true,
+  "launch_target_app": false,
+  "scan_interval_ms": 1000,
+  "dll_path": ""
+}
