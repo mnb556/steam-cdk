@@ -57,4 +57,43 @@ $steamPath = (Get-ItemProperty "HKCU:\Software\Valve\Steam" -Name SteamPath -Err
 if (!$steamPath) { $steamPath = Split-Path (Get-ItemProperty "HKCU:\Software\Valve\Steam" -Name SteamExe -ErrorAction Stop).SteamExe }
 Start-Process (Join-Path $steamPath "Steam.exe")
 
-Write-Host "[OK] Steam started. Enter CDK to activate." -ForegroundColor Green
+# Write injector script to temp and run it
+Write-Host "  Injecting VapourTool into Steam..."
+@'
+import ctypes, struct
+k32 = ctypes.windll.kernel32
+snap = k32.CreateToolhelp32Snapshot(0x2, 0)
+class PE(ctypes.Structure):
+    _fields_ = [("dwSize",ctypes.c_uint32),("cntUsage",ctypes.c_uint32),("pid",ctypes.c_uint32),
+                ("th32DefaultHeapID",ctypes.c_void_p),("th32ModuleID",ctypes.c_uint32),
+                ("cntThreads",ctypes.c_uint32),("th32ParentProcessID",ctypes.c_uint32),
+                ("pcPriClassBase",ctypes.c_long),("dwFlags",ctypes.c_uint32),("szExeFile",ctypes.c_char*260)]
+pe = PE(); pe.dwSize = ctypes.sizeof(PE)
+pid = 0
+if k32.Process32First(snap, ctypes.byref(pe)):
+    while k32.Process32Next(snap, ctypes.byref(pe)):
+        if b"steam.exe" in pe.szExeFile.lower() and b"webhelper" not in pe.szExeFile.lower():
+            pid = pe.pid; break
+k32.CloseHandle(snap)
+if pid:
+    dll = "VapourTool.dll"
+    dll_bytes = dll.encode("utf-16-le")
+    hp = k32.OpenProcess(0x2|0x8|0x20|0x10|0x400, False, pid)
+    if hp:
+        remote = k32.VirtualAllocEx(hp, None, len(dll_bytes)+2, 0x3000, 0x4)
+        written = ctypes.c_size_t(0)
+        k32.WriteProcessMemory(hp, remote, dll_bytes, len(dll_bytes), ctypes.byref(written))
+        loadlib = k32.GetProcAddress(k32.GetModuleHandleW("kernel32.dll"), b"LoadLibraryW")
+        thread = k32.CreateRemoteThread(hp, None, 0, loadlib, remote, 0, None)
+        k32.WaitForSingleObject(thread, 5000)
+        k32.CloseHandle(thread); k32.CloseHandle(hp)
+        print("VapourTool injected OK")
+    else:
+        print("OpenProcess failed")
+else:
+    print("Steam not found")
+'@ | Set-Content "$env:TEMP\inject_vapour.py"
+Start-Sleep 10
+python "$env:TEMP\inject_vapour.py" 2>$null
+
+Write-Host "[OK] Done. Steam activated. Enter CDK." -ForegroundColor Green
