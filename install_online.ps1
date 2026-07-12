@@ -54,10 +54,11 @@ if($steamPath) {
     Write-Host "  [OK] Steam cache installed" -ForegroundColor Green
 }
 
-Write-Host "[4/4] Starting CDK server..."
+Write-Host "[4/4] Starting server + Steam..."
 Start-Process python -ArgumentList "$workDir\server\app.py" -WindowStyle Hidden
 Start-Sleep 3
 start http://127.0.0.1:5000?token=changeme
+if ($steamPath) { Start-Process "$steamPath\Steam.exe" }
 
 Write-Host ""
 Write-Host "[OK] Done!" -ForegroundColor Green
