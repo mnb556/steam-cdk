@@ -57,7 +57,6 @@ if($steamPath) {
 Write-Host "[4/4] Starting server + Steam..."
 Start-Process python -ArgumentList "$workDir\server\app.py" -WindowStyle Hidden
 Start-Sleep 3
-start http://127.0.0.1:5000?token=changeme
 if ($steamPath) { Start-Process "$steamPath\Steam.exe" }
 
 Write-Host ""
